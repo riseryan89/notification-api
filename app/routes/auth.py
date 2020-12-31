@@ -8,11 +8,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
-from app import models
 from app.common.consts import JWT_SECRET, JWT_ALGORITHM
 from app.database.conn import db
 from app.database.schema import Users
-from app.models import SnsType, Token, UserToken
+from app.models import SnsType, Token, UserToken, UserRegister
 
 """
 1. 구글 로그인을 위한 구글 앱 준비 (구글 개발자 도구)
@@ -26,17 +25,29 @@ from app.models import SnsType, Token, UserToken
 8. 이메일 인증 메일 발송
 9. 각 SNS 에서 Unlink 
 10. 회원 탈퇴
-11. 탈퇴 회원 정보 저장 기간 동안 보유(법적 최대 한도차 내에서, 가입 때 약관 동의 받아야 함, 재가입 방지 용도로 사용하면 가능)
+11. 탈퇴 회원 정보 저장 기간 동안 보유(법적 최대 한도 내에서, 가입 때 약관 동의 받아야 함, 재가입 방지 용도로 사용하면 가능)
+
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+405 Method not allowed
+500 Internal Error
+502 Bad Gateway 
+504 Timeout
+200 OK
+201 Created
+
 """
 
 
 router = APIRouter()
 
 
-@router.post("/register/{sns_type}", status_code=200, response_model=Token)
-async def register(sns_type: SnsType, reg_info: models.UserRegister, session: Session = Depends(db.session)):
+@router.post("/register/{sns_type}", status_code=201, response_model=Token)
+async def register(sns_type: SnsType, reg_info: UserRegister, session: Session = Depends(db.session)):
     """
-    회원가입 API
+    `회원가입 API`\n
     :param sns_type:
     :param reg_info:
     :param session:
@@ -44,7 +55,7 @@ async def register(sns_type: SnsType, reg_info: models.UserRegister, session: Se
     """
     if sns_type == SnsType.email:
         is_exist = await is_email_exist(reg_info.email)
-        if not reg_info.email or reg_info.pw:
+        if not reg_info.email or not reg_info.pw:
             return JSONResponse(status_code=400, content=dict(msg="Email and PW must be provided'"))
         if is_exist:
             return JSONResponse(status_code=400, content=dict(msg="EMAIL_EXISTS"))
@@ -55,8 +66,8 @@ async def register(sns_type: SnsType, reg_info: models.UserRegister, session: Se
     return JSONResponse(status_code=400, content=dict(msg="NOT_SUPPORTED"))
 
 
-@router.post("/login/{sns_type}", status_code=200)
-async def login(sns_type: SnsType, user_info: models.UserRegister):
+@router.post("/login/{sns_type}", status_code=200, response_model=Token)
+async def login(sns_type: SnsType, user_info: UserRegister):
     if sns_type == SnsType.email:
         is_exist = await is_email_exist(user_info.email)
         if not user_info.email or not user_info.pw:

@@ -63,6 +63,7 @@ class BaseMixin:
         return query.first()
 
 
+
 class Users(Base, BaseMixin):
     __tablename__ = "users"
     status = Column(Enum("active", "deleted", "blocked"), default="active")
