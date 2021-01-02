@@ -12,7 +12,7 @@ from app.common.config import conf
 from app.middlewares.token_validator import AccessControl
 from app.middlewares.trusted_hosts import TrustedHostMiddleware
 from app.routes import index, auth
-
+from app.database import schema
 
 def create_app():
     """
@@ -24,7 +24,8 @@ def create_app():
     conf_dict = asdict(c)
     db.init_app(app, **conf_dict)
     # 데이터 베이스 이니셜라이즈
-
+    from app.database import sqlalchemist as s
+    s.session.initialize(db.session, schema)
     # 레디스 이니셜라이즈
 
     # 미들웨어 정의

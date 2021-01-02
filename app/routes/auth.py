@@ -54,7 +54,7 @@ async def register(sns_type: SnsType, reg_info: UserRegister, session: Session =
     :return:
     """
     if sns_type == SnsType.email:
-        is_exist = await is_email_exist(reg_info.email)
+        is_exist = is_email_exist(reg_info.email)
         if not reg_info.email or not reg_info.pw:
             return JSONResponse(status_code=400, content=dict(msg="Email and PW must be provided'"))
         if is_exist:
@@ -69,7 +69,8 @@ async def register(sns_type: SnsType, reg_info: UserRegister, session: Session =
 @router.post("/login/{sns_type}", status_code=200, response_model=Token)
 async def login(sns_type: SnsType, user_info: UserRegister):
     if sns_type == SnsType.email:
-        is_exist = await is_email_exist(user_info.email)
+        is_exist = is_email_exist(user_info.email)
+
         if not user_info.email or not user_info.pw:
             return JSONResponse(status_code=400, content=dict(msg="Email and PW must be provided'"))
         if not is_exist:
@@ -83,7 +84,9 @@ async def login(sns_type: SnsType, user_info: UserRegister):
     return JSONResponse(status_code=400, content=dict(msg="NOT_SUPPORTED"))
 
 
-async def is_email_exist(email: str):
+def is_email_exist(email: str):
+    a = Users.filter(id__gt=1).order_by('id', '-email').all()
+    print(a[0].dict("id", "phone_number"))
     get_email = Users.get(email=email)
     if get_email:
         return True
