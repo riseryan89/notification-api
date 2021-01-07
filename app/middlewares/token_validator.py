@@ -4,19 +4,14 @@ import re
 
 import jwt
 
-from fastapi.params import Header
 from jwt.exceptions import ExpiredSignatureError, DecodeError
-from pydantic import BaseModel
 from starlette.requests import Request
-from starlette.datastructures import URL, Headers
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse
 
 from app.common.consts import EXCEPT_PATH_LIST, EXCEPT_PATH_REGEX
 from app.errors import exceptions as ex
-from starlette.types import ASGIApp, Receive, Scope, Send
 
 from app.common import config, consts
-from app.common.config import conf
 from app.errors.exceptions import APIException
 from app.models import UserToken
 

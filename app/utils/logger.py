@@ -47,7 +47,7 @@ async def api_logger(request: Request, response=None, error=None):
         client=user_log,
         processedTime=str(round(t * 1000, 5)) + "ms",
         datetimeUTC=datetime.utcnow().strftime(time_format),
-        datetimeKR=(datetime.utcnow() + timedelta(hours=9)).strftime(time_format),
+        datetimeKST=(datetime.utcnow() + timedelta(hours=9)).strftime(time_format),
     )
     if body:
         log_dict["body"] = body
