@@ -78,7 +78,8 @@ async def login(sns_type: SnsType, user_info: UserRegister):
         is_verified = bcrypt.checkpw(user_info.pw.encode("utf-8"), user.pw.encode("utf-8"))
         if not is_verified:
             return JSONResponse(status_code=400, content=dict(msg="NO_MATCH_USER"))
-        token = dict(Authorization=f"Bearer {create_access_token(data=UserToken.from_orm(user).dict(exclude={'pw', 'marketing_agree'}),)}")
+        token = dict(
+            Authorization=f"Bearer {create_access_token(data=UserToken.from_orm(user).dict(exclude={'pw', 'marketing_agree'}),)}")
         return token
     return JSONResponse(status_code=400, content=dict(msg="NOT_SUPPORTED"))
 
