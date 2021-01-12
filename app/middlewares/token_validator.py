@@ -3,6 +3,7 @@ import typing
 import re
 
 import jwt
+import sqlalchemy.exc
 
 from jwt.exceptions import ExpiredSignatureError, DecodeError
 from starlette.requests import Request
@@ -12,7 +13,7 @@ from app.common.consts import EXCEPT_PATH_LIST, EXCEPT_PATH_REGEX
 from app.errors import exceptions as ex
 
 from app.common import config, consts
-from app.errors.exceptions import APIException
+from app.errors.exceptions import APIException, SqlFailureEx
 from app.models import UserToken
 
 from app.utils.date_utils import D
@@ -91,6 +92,8 @@ async def token_decode(access_token):
 
 
 async def exception_handler(error: Exception):
+    if isinstance(error, sqlalchemy.exc.OperationalError):
+        error = SqlFailureEx(ex=error)
     if not isinstance(error, APIException):
         error = APIException(ex=error, detail=str(error))
     return error

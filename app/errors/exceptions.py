@@ -104,7 +104,7 @@ class SqlFailureEx(APIException):
     def __init__(self, ex: Exception = None):
         super().__init__(
             status_code=StatusCode.HTTP_500,
-            msg=f"이 에러는 서버측 에러 입니다. 자동으로 리포팅 되며, 빠르게 수정하겠습니다..",
+            msg=f"이 에러는 서버측 에러 입니다. 자동으로 리포팅 되며, 빠르게 수정하겠습니다.",
             detail="Internal Server Error",
             code=f"{StatusCode.HTTP_500}{'2'.zfill(4)}",
             ex=ex,
