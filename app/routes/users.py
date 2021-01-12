@@ -1,13 +1,11 @@
 from typing import List
 from uuid import uuid4
 
-import bcrypt
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette.requests import Request
-from fastapi.logger import logger
 
-from app.common.consts import MAX_API_KEY
+from app.common.consts import MAX_API_KEY, MAX_API_WHITELIST
 from app.database.conn import db
 from app.database.schema import Users, ApiKeys, ApiWhiteLists
 from app import models as m
@@ -117,6 +115,13 @@ async def get_api_keys(request: Request, key_id: int):
 async def create_api_keys(request: Request, key_id: int, ip: m.CreateAPIWhiteLists, session: Session = Depends(db.session)):
     user = request.state.user
     await check_api_owner(user.id, key_id)
+    import ipaddress
+    try:
+        _ip = ipaddress.ip_address(ip.ip_addr)
+    except Exception as e:
+        raise ex.InvalidIpEx(ip.ip_addr, e)
+    if ApiWhiteLists.filter(api_key_id=key_id).count() == MAX_API_WHITELIST:
+        raise ex.MaxWLCountEx()
     ip_dup = ApiWhiteLists.get(api_key_id=key_id, ip_addr=ip.ip_addr)
     if ip_dup:
         return ip_dup

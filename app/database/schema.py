@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 
 from sqlalchemy import (
     Column,
@@ -9,11 +8,8 @@ from sqlalchemy import (
     Enum,
     Boolean,
     ForeignKey,
-    JSON,
 )
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship
-from sqlalchemy.orm import reconstructor
 
 from app.database.conn import Base, db
 
@@ -55,7 +51,7 @@ class BaseMixin:
         return obj
 
     @classmethod
-    def get(cls, **kwargs):
+    def get(cls, **kwargs) -> object:
         """
         Simply get a Row
         :param kwargs:

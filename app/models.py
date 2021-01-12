@@ -1,10 +1,9 @@
 from datetime import datetime
 from enum import Enum
-from typing import List
 
 from pydantic import Field
 from pydantic.main import BaseModel
-from pydantic.networks import EmailStr
+from pydantic.networks import EmailStr, IPvAnyAddress
 
 
 class UserRegister(BaseModel):
@@ -74,9 +73,9 @@ class GetApiKeys(GetApiKeyList):
 class CreateAPIWhiteLists(BaseModel):
     ip_addr: str = None
 
-    class Config:
-        orm_mode = True
-
 
 class GetAPIWhiteLists(CreateAPIWhiteLists):
     id: int
+
+    class Config:
+        orm_mode = True
