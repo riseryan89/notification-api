@@ -63,7 +63,7 @@ async def create_api_keys(request: Request, key_info: m.AddApiKey, session: Sess
         raise ex.MaxKeyCountEx()
 
     alphabet = string.ascii_letters + string.digits
-    s_key = ''.join(secrets.choice(alphabet) for i in range(40))
+    s_key = ''.join(secrets.choice(alphabet) for _ in range(40))
     uid = None
     while not uid:
         uid_candidate = f"{str(uuid4())[:-12]}{str(uuid4())}"
@@ -76,7 +76,7 @@ async def create_api_keys(request: Request, key_info: m.AddApiKey, session: Sess
     return new_key
 
 
-@router.put('/apikeys/{key_id}')
+@router.put('/apikeys/{key_id}', response_model=m.GetApiKeyList)
 async def update_api_keys(request: Request, key_id: int, key_info: m.AddApiKey):
     """
     API KEY User Memo Update
@@ -88,7 +88,7 @@ async def update_api_keys(request: Request, key_id: int, key_info: m.AddApiKey):
     user = request.state.user
     key_data = ApiKeys.filter(id=key_id)
     if key_data and key_data.first().user_id == user.id:
-        key_data.update(auto_commit=True, **key_info.dict())
+        return key_data.update(auto_commit=True, **key_info.dict())
     raise ex.NoKeyMatchEx()
 
 

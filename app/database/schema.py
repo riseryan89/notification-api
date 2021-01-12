@@ -122,11 +122,16 @@ class BaseMixin:
         return self
 
     def update(self, auto_commit: bool = False, **kwargs):
-        result = self._q.update(kwargs)
+        qs = self._q.update(kwargs)
+        get_id = self.id
+        ret = None
+
         self._session.flush()
+        if qs > 0 :
+            ret = self._q.first()
         if auto_commit:
             self._session.commit()
-        return result
+        return ret
 
     def first(self):
         result = self._q.first()
