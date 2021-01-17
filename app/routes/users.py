@@ -13,12 +13,12 @@ from app.errors import exceptions as ex
 import string
 import secrets
 
-from app.models import MessageOk
+from app.models import MessageOk, UserMe
 
 router = APIRouter(prefix='/user')
 
 
-@router.get('/me')
+@router.get('/me', response_model=UserMe)
 async def get_me(request: Request):
     user = request.state.user
     user_info = Users.get(id=user.id)
