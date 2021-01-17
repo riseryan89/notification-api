@@ -60,8 +60,8 @@ async def access_control(request: Request, call_next):
                 if "key" not in qs_keys or "timestamp" not in qs_keys:
                     raise ex.APIQueryStringEx()
 
-                if "secret" not in headers.keys():
-                    raise ex.APIHeaderInvalidEx()
+                # if "secret" not in headers.keys():
+                #     raise ex.APIHeaderInvalidEx()
                 session = next(db.session())
                 api_key = ApiKeys.get(session=session, access_key=qs_dict["key"])
                 if not api_key:
@@ -70,12 +70,12 @@ async def access_control(request: Request, call_next):
                 d = mac.digest()
                 validating_secret = str(base64.b64encode(d).decode('utf-8'))
 
-                if headers["secret"] != validating_secret:
-                    raise ex.APIHeaderInvalidEx()
+                # if headers["secret"] != validating_secret:
+                #     raise ex.APIHeaderInvalidEx()
 
                 now_timestamp = int(D.datetime(diff=9).timestamp())
-                if now_timestamp - 10 > int(qs_dict["timestamp"]) or now_timestamp < int(qs_dict["timestamp"]):
-                    raise ex.APITimestampEx()
+                # if now_timestamp - 10 > int(qs_dict["timestamp"]) or now_timestamp < int(qs_dict["timestamp"]):
+                #     raise ex.APITimestampEx()
 
                 user_info = to_dict(api_key.users)
                 request.state.user = UserToken(**user_info)
