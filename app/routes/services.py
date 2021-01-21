@@ -1,4 +1,5 @@
 import json
+import os
 from typing import List
 from uuid import uuid4
 
@@ -16,7 +17,7 @@ from app.errors import exceptions as ex
 import string
 import secrets
 
-from app.models import MessageOk
+from app.models import MessageOk, KakaoMsgBody
 
 router = APIRouter(prefix='/services')
 
@@ -29,10 +30,11 @@ async def get_all_services(request: Request):
 
 
 @router.post('kakao/send')
-async def send_kakao(request: Request):
-    token = "dOAap7zvH9ri6kj53SzApCTBy41AS6EOvAViNwopyNgAAAF3I_7Ppg"
+async def send_kakao(request: Request, body: KakaoMsgBody):
+    token = os.environ.get("KAKAO_KEY", "dOAap7zvH9ri6kj53SzApCTBy41AS6E*****************g")
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/x-www-form-urlencoded"}
-    body = dict(object_type="text", text="Koala Sample for FastAPI", link=dict(web_url="https://dingrr.com", mobile_url="https://dingrr.com"), button_title="지금 확인")
+
+    body = dict(object_type="text", text=body.msg, link=dict(web_url="https://dingrr.com", mobile_url="https://dingrr.com"), button_title="지금 확인")
     data = {"template_object": json.dumps(body, ensure_ascii=False)}
 
     res = requests.post("https://kapi.kakao.com/v2/api/talk/memo/default/send", headers=headers, data=data)

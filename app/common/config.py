@@ -10,9 +10,9 @@ class Config:
     기본 Configuration
     """
     BASE_DIR = base_dir
-
     DB_POOL_RECYCLE: int = 900
     DB_ECHO: bool = True
+    DEBUG = False
 
 
 @dataclass
@@ -27,7 +27,7 @@ class LocalConfig(Config):
 class ProdConfig(Config):
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
-    DEBUG = False
+
 
 
 def conf():

@@ -44,7 +44,10 @@ def create_app():
     # 라우터 정의
     app.include_router(index.router)
     app.include_router(auth.router, tags=["Authentication"], prefix="/api")
-    app.include_router(services.router, tags=["Services"], prefix="/api")
+    if conf().DEBUG:
+        app.include_router(services.router, tags=["Services"], prefix="/api", dependencies=[Depends(API_KEY_HEADER)])
+    else:
+        app.include_router(services.router, tags=["Services"], prefix="/api")
     app.include_router(users.router, tags=["Users"], prefix="/api", dependencies=[Depends(API_KEY_HEADER)])
     return app
 
