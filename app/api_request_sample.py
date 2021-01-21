@@ -24,7 +24,7 @@ def sample_request():
     secret_key = "QhOaeXTAAkW6yWt31jWDeERkBsZ3X4UmPds656YD"
     cur_time = datetime.utcnow()+timedelta(hours=9)
     cur_timestamp = int(cur_time.timestamp())
-    qs = dict(key= access_key, timestamp=cur_timestamp)
+    qs = dict(key=access_key, timestamp=cur_timestamp)
     header_secret = hash_string(parse_params_to_str(qs), secret_key)
 
     url = f"http://127.0.0.1:8080/api/services?{parse_params_to_str(qs)}"
@@ -33,3 +33,21 @@ def sample_request():
 
 
 print(sample_request().json())
+
+
+
+
+
+"""
+채널톡 사업자!
+친구에게 전송
+나에게 전송
+"""
+
+
+
+
+
+
+
+
