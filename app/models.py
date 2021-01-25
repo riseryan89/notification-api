@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from typing import List
 
 from pydantic import Field
 from pydantic.main import BaseModel
@@ -21,6 +22,15 @@ class SnsType(str, Enum):
 
 class Token(BaseModel):
     Authorization: str = None
+
+
+class EmailRecipients(BaseModel):
+    name: str
+    email: str
+
+
+class SendEmail(BaseModel):
+    email_to: List[EmailRecipients] = None
 
 
 class KakaoMsgBody(BaseModel):
