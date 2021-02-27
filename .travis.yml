@@ -4,9 +4,6 @@ language: python
 services:
   - docker
   - mysql
-env:
-  global:
-    - EB_REGION=ap-northeast-2
 python:
   - 3.8
 before_install:
