@@ -14,7 +14,7 @@ def test_registration(client, session):
     res_body = res.json()
     print(res.json())
     assert res.status_code == 201
-    assert "Authorization" in res_body
+    assert "Authorization" in res_body.keys()
 
 
 def test_registration_exist_email(client, session):

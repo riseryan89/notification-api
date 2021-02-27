@@ -58,7 +58,6 @@ class SQLAlchemy:
                 _drop_database(temp_engine, schema_name)
             _create_database(temp_engine, schema_name)
             temp_engine.dispose()
-        self._session = sessionmaker(autocommit=False, autoflush=False, bind=self._engine)
 
         self._session = sessionmaker(autocommit=False, autoflush=False, bind=self._engine)
 

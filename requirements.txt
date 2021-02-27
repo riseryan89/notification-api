@@ -12,6 +12,7 @@ cssutils==1.0.2
 dnspython==2.0.0
 email-validator==1.1.2
 fastapi==0.62.0
+gunicorn==20.0.4
 h11==0.11.0
 idna==2.10
 iniconfig==1.1.1

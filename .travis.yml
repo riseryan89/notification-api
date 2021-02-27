@@ -1,0 +1,52 @@
+os: linux
+dist: bionic
+language: python
+services:
+  - docker
+  - mysql
+env:
+  global:
+    - EB_REGION=ap-northeast-2
+python:
+  - 3.8
+before_install:
+  - pip install awscli
+  - export PATH=$PATH:$HOME/.local/bin
+script:
+  - pytest -v
+before_deploy:
+  - if [ $TRAVIS_BRANCH == "master" ]; then export EB_ENV=notification-prd-apii; fi
+  - if [ $TRAVIS_BRANCH == "develop" ]; then export EB_ENV=notification-dev-api; fi
+  - export REPO_NAME=$(echo $TRAVIS_REPO_SLUG | sed "s_^.*/__")
+  - export ELASTIC_BEANSTALK_LABEL=${REPO_NAME}-${TRAVIS_COMMIT::7}-$(date +%y%m%d%H%M%S)
+deploy:
+  skip_cleanup: true
+  provider: elasticbeanstalk
+  zip_file: source.zip
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  region: ap-northeast-2
+  bucket: elasticbeanstalk-ap-northeast-2-884465654078
+  bucket_path: notification-api
+  app: notification-api
+  env: $EB_ENV
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^master|develop$
+#notifications:
+#  slack:
+#    - rooms:
+#      - secure: ***********
+#      if: branch = master
+#      template:
+#        - "Repo `%{repository_slug}` *%{result}* build (<%{build_url}|#%{build_number}>) for commit (<%{compare_url}|%{commit}>) on branch `%{branch}`."
+#    - rooms:
+#      - secure: ***********
+#      if: branch = staging
+#      template:
+#        - "Repo `%{repository_slug}` *%{result}* build (<%{build_url}|#%{build_number}>) for commit (<%{compare_url}|%{commit}>) on branch `%{branch}`."
+#    - rooms:
+#      - secure: ***********
+#      if: branch = develop
+#      template:
+#        - "Repo `%{repository_slug}` *%{result}* build (<%{build_url}|#%{build_number}>) for commit (<%{compare_url}|%{commit}>) on branch `%{branch}`."
