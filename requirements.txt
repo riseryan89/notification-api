@@ -37,4 +37,5 @@ starlette==0.13.6
 toml==0.10.2
 urllib3==1.26.2
 uvicorn==0.13.1
+uvloop==0.15.2
 yagmail==0.14.245
