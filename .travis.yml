@@ -10,15 +10,15 @@ env:
 python:
   - 3.8
 before_install:
-  - pip install awscli
-  - export PATH=$PATH:$HOME/.local/bin
+  - mysql -e 'CREATE DATABASE testing CHARACTER SET utf8 COLLATE utf8_general_ci;'
 script:
   - pytest -v
 before_deploy:
   - if [ $TRAVIS_BRANCH == "master" ]; then export EB_ENV=notification-prd-apii; fi
   - if [ $TRAVIS_BRANCH == "develop" ]; then export EB_ENV=notification-dev-api; fi
-  - export REPO_NAME=$(echo $TRAVIS_REPO_SLUG | sed "s_^.*/__")
-  - export ELASTIC_BEANSTALK_LABEL=${REPO_NAME}-${TRAVIS_COMMIT::7}-$(date +%y%m%d%H%M%S)
+  - export ARTIFACT_PRE=$(echo $TRAVIS_REPO_SLUG | sed "s_^.*/__")
+  - export ARTIFACT_NAME=${ARTIFACT_PRE}-$(git describe|tr . _)-$(date +%y%m%d_%H%M%S)
+  - export ELASTIC_BEANSTALK_LABEL=$ARTIFACT_NAME
 deploy:
   skip_cleanup: true
   provider: elasticbeanstalk
