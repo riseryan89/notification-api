@@ -7,15 +7,15 @@ services:
 python:
   - 3.8
 before_install:
-  - mysql -e 'CREATE DATABASE testing CHARACTER SET utf8 COLLATE utf8_general_ci;'
+  - pip install awscli
+  - export PATH=$PATH:$HOME/.local/bin
 script:
   - pytest -v
 before_deploy:
   - if [ $TRAVIS_BRANCH == "master" ]; then export EB_ENV=notification-prd-apii; fi
   - if [ $TRAVIS_BRANCH == "develop" ]; then export EB_ENV=notification-dev-api; fi
-  - export ARTIFACT_PRE=$(echo $TRAVIS_REPO_SLUG | sed "s_^.*/__")
-  - export ARTIFACT_NAME=${ARTIFACT_PRE}-$(git describe|tr . _)-$(date +%y%m%d_%H%M%S)
-  - export ELASTIC_BEANSTALK_LABEL=$ARTIFACT_NAME
+  - export REPO_NAME=$(echo $TRAVIS_REPO_SLUG | sed "s_^.*/__")
+  - export ELASTIC_BEANSTALK_LABEL=${REPO_NAME}-${TRAVIS_COMMIT::7}-$(date +%y%m%d%H%M%S)
 deploy:
   skip_cleanup: true
   provider: elasticbeanstalk
@@ -23,12 +23,13 @@ deploy:
   secret_access_key: $AWS_SECRET
   region: ap-northeast-2
   bucket: elasticbeanstalk-ap-northeast-2-884465654078
-  bucket_path: notification-api
-  app: notification-api
+  bucket_path: 	notification-api
+  app: 	notification-api
   env: $EB_ENV
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^master|develop$
+    condition: $TRAVIS_BRANCH =~ ^develop|master
+
 #notifications:
 #  slack:
 #    - rooms:
