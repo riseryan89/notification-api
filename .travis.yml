@@ -22,9 +22,8 @@ before_deploy:
 deploy:
   skip_cleanup: true
   provider: elasticbeanstalk
-  zip_file: source.zip
-  access_key_id: $AWS_ACCESS_KEY_ID
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  access_key_id: $AWS_ACCESS
+  secret_access_key: $AWS_SECRET
   region: ap-northeast-2
   bucket: elasticbeanstalk-ap-northeast-2-884465654078
   bucket_path: notification-api
