@@ -12,7 +12,7 @@ before_install:
 script:
   - pytest -v
 before_deploy:
-  - if [ $TRAVIS_BRANCH == "master" ]; then export EB_ENV=notification-prd-apii; fi
+  - if [ $TRAVIS_BRANCH == "master" ]; then export EB_ENV=notification-prd-api; fi
   - if [ $TRAVIS_BRANCH == "develop" ]; then export EB_ENV=notification-dev-api; fi
   - export REPO_NAME=$(echo $TRAVIS_REPO_SLUG | sed "s_^.*/__")
   - export ELASTIC_BEANSTALK_LABEL=${REPO_NAME}-${TRAVIS_COMMIT::7}-$(date +%y%m%d%H%M%S)

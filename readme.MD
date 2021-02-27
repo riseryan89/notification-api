@@ -43,4 +43,14 @@
     1. Travis CI 사용해보기
     2. AWS Beanstalk 사용해 보기
     3. Route 53 으로 도메인 연결
-
+    
+    1. EB 생성
+    2. DB 생성
+    3. config file 수정
+    4. gunicorn.conf.py 추가
+    5. Dockerfile 추가
+    6. httptools uvloop 추가
+    7. .travis.yml 파일 추가
+    8. travis 가입
+    9. trvis 설정
+    10. 배포 
